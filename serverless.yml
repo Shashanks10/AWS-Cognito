@@ -1,0 +1,55 @@
+service: cognito-service
+
+
+provider:
+  name: aws
+  runtime: python3.10
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  environment:
+    USER_POOL_ID: ${env:USER_POOL_ID}
+    CLIENT_ID: ${env:CLIENT_ID}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cognito-idp:SignUp
+        - cognito-idp:InitiateAuth
+        - cognito-idp:ConfirmSignUp
+        - cognito-idp:RespondToAuthChallenge
+        - cognito-idp:DescribeUserPool
+        - cognito-idp:InitiateAuth
+        - cognito-idp:AdminInitiateAuth
+        - cognito-idp:AdminGetUser
+      Resource: arn:aws:cognito-idp:${self:provider.region}:*:userpool/${self:provider.environment.USER_POOL_ID}
+
+functions:
+  sign_up:
+    handler: handlers.signup
+    events:
+      - http:
+          path: signup
+          method: post
+          cors: true
+
+  sign_in:
+    handler: handlers.signin
+    events:
+      - http:
+          path: signin
+          method: post
+          cors: true
+
+  verify_user:
+    handler: handlers.verify
+    events:
+      - http:
+          path: verify
+          method: post
+          cors: true
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: false
