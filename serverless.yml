@@ -20,7 +20,7 @@ provider:
         - cognito-idp:InitiateAuth
         - cognito-idp:AdminInitiateAuth
         - cognito-idp:AdminGetUser
-      Resource: arn:aws:cognito-idp:${self:provider.region}:*:userpool/${self:provider.environment.USER_POOL_ID}  #---------------our aws cognito userpool ARN
+      Resource: arn:aws:cognito-idp:${self:provider.region}:*:userpool/${self:provider.environment.USER_POOL_ID}  #---------------your aws cognito userpool ARN
 
 functions:
   sign_up:
